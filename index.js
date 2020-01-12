@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv')
 const nodeMailer = require('nodemailer')
 const app = express();
+const fs = require('fs')
 dotenv.config();
 const transporter = nodeMailer.createTransport({
     service: 'gmail',
@@ -14,8 +15,9 @@ const transporter = nodeMailer.createTransport({
 app.set('view engine', 'ejs');
 const allUsers = [];
 const passUsers = [];
+const targetImage = process.env.FIRSTIMAGE
 const fileHandling = ()=>{
-    const fs = require('fs')
+    
     const allUserName = fs.readFileSync(__dirname+'/datas/allname.txt').toString().split('\n');
     const allUserEmail = fs.readFileSync(__dirname+'/datas/allemail.txt').toString().split('\n');
     const passUserName = fs.readFileSync(__dirname+'/datas/passname.txt').toString().split('\n');
@@ -35,16 +37,15 @@ const fileHandling = ()=>{
 }
 fileHandling();
 
-const makeMailOption = (pass, name, email, time = "")=>{
+const makeMailOption = (pass, name, email,time = "")=>{
     if(pass){
         return {
             from: process.env.EMAIL,
-            to: 'scd7896@gmail.com',
-            subject: '김태경 얍 메일 테스트',
+            to: email,
+            subject: '합격 메일 테스트',
             name : name,
             pass : pass,
             time,
-            email,
             html: `<img style="width:750px; height:150px;" src="cid:first_information"/>
                 <h1>yapp에서 보냅니다 여러분</h1>
                 <h3>hi ${name}</h3>
@@ -52,34 +53,34 @@ const makeMailOption = (pass, name, email, time = "")=>{
                 <p>귀하의 합격을 축하합니다</p>
                 <p>${time}까지 와주시기 바랍니다</p>`,
             attachments :[{
-                filename: 'first_information.png',
-                path: __dirname+'/assets/first_information.png',
+                filename: targetImage,
+                path: __dirname+'/assets/'+targetImage, //이미지
                 cid: 'first_information'
             }]
         }; 
     }else{
         return {
             from: process.env.EMAIL,
-            to: 'scd7896@gmail.com',
-            subject: '김태경 얍 메일 테스트',
+            to: email,
+            subject: '불합격 메일 테스트',
             name : name,
             pass : pass,
             time,
-            email,
             html: `<img style="width:750px; height:150px;" src="cid:first_information"/>
                 <h1>yapp에서 떨어짐을 알려드립니다</h1>
                 <h3>hi ${name}</h3>
                 <h4>${email}</h4>
-                <p>귀하의 불합격을 매우 유감스럽게 생각합니다 축하합니다</p>
+                <p>귀하의 불합격을 매우 유감스럽게 생각합니다</p>
                 <p>${time}까지 와주시기 바랍니다</p>`,
             attachments :[{
-                filename: 'first_information.png',
-                path: __dirname+'/assets/first_information.png',
+                filename: targetImage,
+                path: __dirname+'/assets/'+targetImage, //이미지 경로입니다
                 cid: 'first_information'
             }]
         }; 
     }
 }
+
 app.get('/', (req,res)=>{
     return res.render('index')
 })
@@ -89,6 +90,7 @@ app.get('/usersTest',(req,res)=>{
 
 app.get("/mail/shot", (req, res)=>{
     const arr = []
+    
     for(let i = 0 ; i<allUsers.length; i++){
         let mailOptions;
         const targetIndex = passUsers.findIndex((el)=> el.email === allUsers[i].email)
@@ -100,20 +102,19 @@ app.get("/mail/shot", (req, res)=>{
           
         arr.push(mailOptions);
     }
-    for(let i = 0 ; i<arr.length; i++){
-        
-        // try{
-        //     transporter.sendMail(arr[i], function(error, info){
-        //         if (error) {
-        //         console.log(error);
-        //         } else {
-        //         console.log('Email sent: ' + info.response);
-        //         }
-        //     });
-        // }catch{}
-    }
-
+    for(let i = 0 ; i<98; i++){
+        try{
+            setTimeout(()=>{
+                transporter.sendMail(arr[i], function(error, info){
+                    if (error) {
+                        console.log('error', arr[i].name)
+                    } else {
     
+                    }
+                });                    
+            }, [i * 1000]);
+        }catch{}
+    }
     res.status(200).send(arr)
 })
 app.listen(9170 , () => console.log("서버 진행중 9170"));
