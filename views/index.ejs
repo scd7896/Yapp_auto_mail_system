@@ -1,0 +1,14 @@
+<html>
+
+    <body>
+        <button id = "shot_mail_button">김태경의 서버테스트</button>
+    </body>
+    <script>
+        const mailButton = document.querySelector('#shot_mail_button')
+        mailButton.addEventListener('click', ()=>{
+            fetch('/mail/shot')
+                .then((res)=> console.log('완료'))
+                .catch((err)=> console.error(err))
+        })
+    </script>
+</html>
