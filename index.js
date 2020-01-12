@@ -12,42 +12,108 @@ const transporter = nodeMailer.createTransport({
   });
 
 app.set('view engine', 'ejs');
+const allUsers = [];
+const passUsers = [];
+const fileHandling = ()=>{
+    const fs = require('fs')
+    const allUserName = fs.readFileSync(__dirname+'/datas/allname.txt').toString().split('\n');
+    const allUserEmail = fs.readFileSync(__dirname+'/datas/allemail.txt').toString().split('\n');
+    const passUserName = fs.readFileSync(__dirname+'/datas/passname.txt').toString().split('\n');
+    const passUserEmail = fs.readFileSync(__dirname+'/datas/passemail.txt').toString().split('\n');
+    const passUserTime = fs.readFileSync(__dirname+'/datas/passtime.txt').toString().split('\n');
+    for(let i = 0 ; i<allUserName.length; i++){
+        const keyEmail = allUserEmail[i]
+        const valueName = allUserName[i];
+        allUsers.push({email : keyEmail, name : valueName})
+    }
+    for(let i = 0 ; i<passUserName.length; i++){
+        const keyEmail = passUserEmail[i]
+        const valueName = passUserName[i];
+        const passTime = passUserTime[i]
+        passUsers.push({email : keyEmail, name : valueName, time : passTime})
+    }
+}
+fileHandling();
 
-app.get('/', (req,res)=>{
-    return res.render('index')
-})
-app.get("/mail/shot", (req, res)=>{
-    const users = ['김태경', '김태인','주윤지', '장민정'];
-    const arr = []
-    for(let i = 0 ; i<users.length; i++){
-        const mailOptions = {
+const makeMailOption = (pass, name, email, time = "")=>{
+    if(pass){
+        return {
             from: process.env.EMAIL,
             to: 'scd7896@gmail.com',
             subject: '김태경 얍 메일 테스트',
+            name : name,
+            pass : pass,
+            time,
+            email,
             html: `<img style="width:750px; height:150px;" src="cid:first_information"/>
                 <h1>yapp에서 보냅니다 여러분</h1>
-                <h3>hi ${users[i]}</h3>`,
+                <h3>hi ${name}</h3>
+                <h4>${email}</h4>
+                <p>귀하의 합격을 축하합니다</p>
+                <p>${time}까지 와주시기 바랍니다</p>`,
             attachments :[{
                 filename: 'first_information.png',
                 path: __dirname+'/assets/first_information.png',
                 cid: 'first_information'
             }]
-        };    
-        arr.push(mailOptions)
+        }; 
+    }else{
+        return {
+            from: process.env.EMAIL,
+            to: 'scd7896@gmail.com',
+            subject: '김태경 얍 메일 테스트',
+            name : name,
+            pass : pass,
+            time,
+            email,
+            html: `<img style="width:750px; height:150px;" src="cid:first_information"/>
+                <h1>yapp에서 떨어짐을 알려드립니다</h1>
+                <h3>hi ${name}</h3>
+                <h4>${email}</h4>
+                <p>귀하의 불합격을 매우 유감스럽게 생각합니다 축하합니다</p>
+                <p>${time}까지 와주시기 바랍니다</p>`,
+            attachments :[{
+                filename: 'first_information.png',
+                path: __dirname+'/assets/first_information.png',
+                cid: 'first_information'
+            }]
+        }; 
+    }
+}
+app.get('/', (req,res)=>{
+    return res.render('index')
+})
+app.get('/usersTest',(req,res)=>{
+    return res.status(200).send(passUsers)
+})
+
+app.get("/mail/shot", (req, res)=>{
+    const arr = []
+    for(let i = 0 ; i<allUsers.length; i++){
+        let mailOptions;
+        const targetIndex = passUsers.findIndex((el)=> el.email === allUsers[i].email)
+        if( targetIndex !== -1){
+            mailOptions =  makeMailOption(true, passUsers[targetIndex].name, passUsers[targetIndex].email, passUsers[targetIndex].time)
+        }else{
+            mailOptions = makeMailOption(false, allUsers[i].name, allUsers[i].email, "")
+        }
+          
+        arr.push(mailOptions);
     }
     for(let i = 0 ; i<arr.length; i++){
-        try{
-            transporter.sendMail(arr[i], function(error, info){
-                if (error) {
-                console.log(error);
-                } else {
-                console.log('Email sent: ' + info.response);
-                }
-            });
-        }catch{}
+        
+        // try{
+        //     transporter.sendMail(arr[i], function(error, info){
+        //         if (error) {
+        //         console.log(error);
+        //         } else {
+        //         console.log('Email sent: ' + info.response);
+        //         }
+        //     });
+        // }catch{}
     }
 
     
-    res.send(200, '메일 전송완료')
+    res.status(200).send(arr)
 })
 app.listen(9170 , () => console.log("서버 진행중 9170"));
