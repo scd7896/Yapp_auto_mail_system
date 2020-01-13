@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #container {
+                display: flex;
+                flex-direction: row;
+            }
+            #completed_container{
+                display : flex;
+                flex : 1;
+            }
+            #error_container{
+                display: flex;
+                flex : 1;
+                background-color: brown;
+            }
+        </style>
+    </head>
+    <body>
+        <div id = "container">
+            <div id = "completed_container">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>이름</td>
+                            <td>이메일</td>
+                            <td>면접시간</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 0 ; i < completedUsers.length; i++){ %>
+                            <tr>
+                                <td><%= completedUsers[i].name %></td>
+                                <td><%= completedUsers[i].to %></td>
+                                <td><%= completedUsers[i].time %></td>
+                            </tr>
+                        <%}%>
+                    </tbody>
+                </table>
+            </div>
+            <div id = "error_container">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>이름</td>
+                            <td>이메일</td>
+                            <td>면접시간</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i = 0 ; i < errorUsers.length; i++){ %>
+                            <tr>
+                                <td><%= errorUsers[i].name %></td>
+                                <td><%= errorUsers[i].to %></td>
+                                <td><%= errorUsers[i].time %></td>
+                            </tr>
+                        <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <p>현재 완료된 인원 : <%= errorUsers.length + completedUsers.length%> </p>
+            <p>총 인원 : 194</p>
+        </div>
+        <div>
+            <p>재전송 리스트</p>
+            <ul>
+                <% for(let i = 0 ; i < errorUsers.length; i++){ %>
+                    <li><%= errorUsers[i].to %></li>
+                <%}%>
+            </ul>
+        </div>
+        
+    </body>
+</html>
