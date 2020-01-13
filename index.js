@@ -7,14 +7,22 @@ dotenv.config();
 const transporter = nodeMailer.createTransport({
     service: 'gmail',
     auth: {
-      user: process.env.EMAIL,
+      user: process.env.AUTHUSER1,
       pass: process.env.PASSWORD
     }
-  });
-
+});
+const transporter2 = nodeMailer.createTransport({
+    service : 'gmail',
+    auth : {
+        user: process.env.AUTHUSER2,
+        pass : process.env.PASSWORD
+    }
+})
 app.set('view engine', 'ejs');
 const allUsers = [];
 const passUsers = [];
+const completedUsers = [];
+const errorUsers = [];
 const targetImage = process.env.FIRSTIMAGE
 const fileHandling = ()=>{
     
@@ -84,6 +92,9 @@ const makeMailOption = (pass, name, email,time = "")=>{
 app.get('/', (req,res)=>{
     return res.render('index')
 })
+app.get('/check/user', (req, res)=>{
+    return res.render('check',{completedUsers : completedUsers, errorUsers : errorUsers})
+})
 app.get('/usersTest',(req,res)=>{
     return res.status(200).send(passUsers)
 })
@@ -96,6 +107,7 @@ app.get("/mail/shot", (req, res)=>{
         const targetIndex = passUsers.findIndex((el)=> el.email === allUsers[i].email)
         if( targetIndex !== -1){
             mailOptions =  makeMailOption(true, passUsers[targetIndex].name, passUsers[targetIndex].email, passUsers[targetIndex].time)
+            
         }else{
             mailOptions = makeMailOption(false, allUsers[i].name, allUsers[i].email, "")
         }
@@ -108,8 +120,23 @@ app.get("/mail/shot", (req, res)=>{
                 transporter.sendMail(arr[i], function(error, info){
                     if (error) {
                         console.log('error', arr[i].name)
+                        errorUsers.push(arr[i]);
                     } else {
-    
+                        completedUsers.push(arr[i])
+                    }
+                });                    
+            }, [i * 1000]);
+        }catch{}
+    }
+    for(let i = 98; i<arr.length; i++){
+        try{
+            setTimeout(()=>{
+                transporter2.sendMail(arr[i], function(error, info){
+                    if (error) {
+                        console.log('error', arr[i].name)
+                        errorUsers.push(arr[i])
+                    } else {
+                        completedUsers.push(arr[i])
                     }
                 });                    
             }, [i * 1000]);
