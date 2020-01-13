@@ -59,11 +59,17 @@ const makeMailOption = (pass, name, email,time = "")=>{
                 <h3>hi ${name}</h3>
                 <h4>${email}</h4>
                 <p>귀하의 합격을 축하합니다</p>
-                <p>${time}까지 와주시기 바랍니다</p>`,
+                <p>${time}까지 와주시기 바랍니다</p>
+                <p>약도입니다</p>
+                <img style = "450px; 450px; src="cid:interview_place" />`,
             attachments :[{
                 filename: targetImage,
                 path: __dirname+'/assets/'+targetImage, //이미지
                 cid: 'first_information'
+            }, {
+                filename : process.env.INTERVIEWPLACE,
+                path : __dirname+'/assets/'+process.env.INTERVIEWPLACE,
+                cid : "interview_place"
             }]
         }; 
     }else{
