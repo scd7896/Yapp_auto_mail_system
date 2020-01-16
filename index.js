@@ -50,18 +50,19 @@ const makeMailOption = (pass, name, email,time = "")=>{
         return {
             from: process.env.EMAIL,
             to: email,
-            subject: '합격 메일 테스트',
+            subject: 'YAPP 16기 서류심사 결과 안내',
             name : name,
             pass : pass,
             time,
             html: `<img style="width:750px; height:150px;" src="cid:first_information"/>
-                <h1>yapp에서 보냅니다 여러분</h1>
-                <h3>hi ${name}</h3>
-                <h4>${email}</h4>
-                <p>귀하의 합격을 축하합니다</p>
-                <p>${time}까지 와주시기 바랍니다</p>
-                <p>약도입니다</p>
-                <img style = "450px; 450px; src="cid:interview_place" />`,
+                <h2>안녕하세요 ${name}님, YAPP입니다.</h2>
+                <h3>이번 YAPP 16기 서류합격이 되셨음을 기쁜 마음으로 알려드립니다.</h3>
+                <p>${name}님의 면접 시각은 ${time} 입니다 </p>
+                <p>확인 후 회신 부탁드리겠습니다.</p>
+                <p>감사합니다. </p>
+                <p>YAPP 운영진 드림</p>
+                <p>면접장소는 강남역 슈퍼스타트입니다. 약도를 참조해주세요 </p>
+                <img style = "width : 500px; height:400px;" src="cid:interview_place" />`,
             attachments :[{
                 filename: targetImage,
                 path: __dirname+'/assets/'+targetImage, //이미지
@@ -76,16 +77,16 @@ const makeMailOption = (pass, name, email,time = "")=>{
         return {
             from: process.env.EMAIL,
             to: email,
-            subject: '불합격 메일 테스트',
+            subject: 'YAPP 16기 서류심사 결과 안내',
             name : name,
             pass : pass,
             time,
             html: `<img style="width:750px; height:150px;" src="cid:first_information"/>
-                <h1>yapp에서 떨어짐을 알려드립니다</h1>
-                <h3>hi ${name}</h3>
-                <h4>${email}</h4>
-                <p>귀하의 불합격을 매우 유감스럽게 생각합니다</p>
-                <p>${time}까지 와주시기 바랍니다</p>`,
+                <h3>안녕하세요 ${name}님, YAPP입니다</h3>
+                <p>${name}께서는 안타깝게도 이번 YAPP16기 서류심사에서 합격의 기쁜 소식을 전해드리지 못하게 되었습니다.</p>
+                <p>비록 이번 활동에 함께 할 수 없게 되었지만,</p>
+                <p>YAPP에 보내주신 관심에 감사드리며 추후 더 좋은 기회로 함께할 수 있길 바랍니다.</p>
+                <p>YAPP 운영진 드림.</p>`,
             attachments :[{
                 filename: targetImage,
                 path: __dirname+'/assets/'+targetImage, //이미지 경로입니다
