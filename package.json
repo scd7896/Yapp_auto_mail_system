@@ -1,6 +1,6 @@
 {
   "name": "yapp_mail_system",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
-    "nodemailer": "^6.4.2"
+    "nodemailer": "^6.4.2",
+    "xlsx": "^0.15.5"
   }
 }

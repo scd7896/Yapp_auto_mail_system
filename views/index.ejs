@@ -1,6 +1,9 @@
 <html>
 
     <body>
+        <div id = "root">
+        
+        </div>
         <button id = "shot_mail_button">김태경의 서버테스트</button>
         <br />
         <br />
@@ -18,9 +21,13 @@
         const userNameTest = document.querySelector('#user_name_test')
         userNameTest.addEventListener('click', ()=>{
             fetch('/usersTest')
-                .then((res)=> res.json)
+                .then((res)=> res.json())
                 .then((value)=> console.log(value))
                 .catch((err)=> console.error(err))
         })
+        const rootDiv = document.querySelector('#root')
+        
+        
+        console.dir(rootDiv)
     </script>
 </html>

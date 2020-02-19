@@ -1,3 +1,4 @@
 node_modules
 .env
 datas
+public/nodeexcel.xlsx

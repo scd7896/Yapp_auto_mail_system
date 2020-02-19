@@ -1,53 +1,35 @@
 const express = require('express');
 const dotenv = require('dotenv')
+dotenv.config();
 const nodeMailer = require('nodemailer')
 const app = express();
-const fs = require('fs')
-dotenv.config();
-const transporter = nodeMailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.AUTHUSER1,
-      pass: process.env.PASSWORD
-    }
-});
-const transporter2 = nodeMailer.createTransport({
-    service : 'gmail',
-    auth : {
-        user: process.env.AUTHUSER2,
-        pass : process.env.PASSWORD
-    }
-})
-app.set('view engine', 'ejs');
+const fs = require('fs');
+const XLSX = require('xlsx');
+const allSheets = XLSX.readFile(__dirname + "/public/nodeexcel.xlsx")
+const resultSheet = allSheets.Sheets['result']
 const allUsers = [];
-const passUsers = [];
-const completedUsers = [];
-const errorUsers = [];
-const targetImage = process.env.SECONDIMAGE
-const fileHandling = ()=>{
-    
-    const allUserName = fs.readFileSync(__dirname+'/datas/allname.txt').toString().split('\n');
-    const allUserEmail = fs.readFileSync(__dirname+'/datas/allemail.txt').toString().split('\n');
-    const passUserName = fs.readFileSync(__dirname+'/datas/passname.txt').toString().split('\n');
-    const passUserEmail = fs.readFileSync(__dirname+'/datas/passemail.txt').toString().split('\n');
-    // const passUserTime = fs.readFileSync(__dirname+'/datas/passtime.txt').toString().split('\n');
-    for(let i = 0 ; i<allUserName.length; i++){
-        const keyEmail = allUserEmail[i]
-        const valueName = allUserName[i];
-        allUsers.push({email : keyEmail, name : valueName})
+const allMemBerCount = process.env.ALL_MEMBER_COUNT
+
+for(let i = 2 ; i<=allMemBerCount; i++){
+    //시트 행 번호에 따른 정보
+    /**
+     *  H: 합격여부
+     *  A: 이메일
+     *  C: 이름
+     */
+    const isPass = resultSheet[`H${i}`] !== undefined && resultSheet[`H${i}`].v == '합격'
+    const oneUser = {
+        email: resultSheet[`A${i}`].v,
+        name: resultSheet[`C${i}`].v,
+        isPass: isPass
     }
-    for(let i = 0 ; i<passUserName.length; i++){
-        const keyEmail = passUserEmail[i]
-        const valueName = passUserName[i];
-        // const passTime = passUserTime[i]
-        passUsers.push({
-            email : keyEmail, 
-            name : valueName, 
-            // time : passTime
-        })
-    }
+    allUsers.push(oneUser)
 }
-fileHandling();
+console.log(allUsers)
+app.set('view engine', 'ejs');
+
+const targetImage = process.env.SECONDIMAGE
+
 
 const makeMailOption = (pass, name, email,time = "")=>{
     if(pass){
@@ -112,7 +94,7 @@ app.get('/check/user', (req, res)=>{
     return res.render('check',{completedUsers : completedUsers, errorUsers : errorUsers})
 })
 app.get('/usersTest',(req,res)=>{
-    return res.status(200).send(passUsers)
+    return res.status(200).send(allUsers)
 })
 
 app.get("/mail/shot", (req, res)=>{
