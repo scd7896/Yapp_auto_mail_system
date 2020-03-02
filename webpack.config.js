@@ -1,10 +1,10 @@
 const path = require('path')
 const fs = require('fs')
-const files= fs.readdirSync(__dirname+'/src/pages')
+const files= fs.readdirSync(__dirname+'/src/view/views')
 
 var obj = files.reduce((o, val)=> { 
     const key = val.split('.')[0]
-    o[key] = __dirname+'/src/views/'+val; 
+    o[key] = __dirname+'/src/view/views/'+val; 
     return o; 
 }, {});
 

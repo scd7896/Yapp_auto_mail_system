@@ -1,12 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import CheckListPage from "../pages/CheckList";
+import App from "../pages/Index";
 
 const CheckList = () => {
     return (
         <div>
             hello world
-            <CheckListPage />
+            <App />
         </div>
     );
 };
