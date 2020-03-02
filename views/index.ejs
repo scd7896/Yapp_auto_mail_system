@@ -1,33 +1,7 @@
 <html>
 
     <body>
-        <div id = "root">
-        
-        </div>
-        <button id = "shot_mail_button">김태경의 서버테스트</button>
-        <br />
-        <br />
-        <button id = "user_name_test">김태경의 메일유저들 테스트</button>
-        <a href = "/check/user" target="_blank" >유저상황 확인하기</a>
+        <div id="root"></div>
+        <script src="<%= process.env.HOST_URL %>/static/index.js"></script> 
     </body>
-    <script>
-        const mailButton = document.querySelector('#shot_mail_button')
-        mailButton.addEventListener('click', ()=>{
-            fetch('/mail/shot')
-                .then((res)=> res.json())
-                .then((value)=> console.log(value))
-                .catch((err)=> console.error(err))
-        })
-        const userNameTest = document.querySelector('#user_name_test')
-        userNameTest.addEventListener('click', ()=>{
-            fetch('/usersTest')
-                .then((res)=> res.json())
-                .then((value)=> console.log(value))
-                .catch((err)=> console.error(err))
-        })
-        const rootDiv = document.querySelector('#root')
-        
-        
-        console.dir(rootDiv)
-    </script>
 </html>
