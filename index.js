@@ -13,7 +13,6 @@ app.use(express.urlencoded({extended : true}))
 app.use(cors({
     origin : true
 }))
-const fs = require('fs'); 
 const XLSX = require('xlsx'); //엑셀파일 읽어오는 모듈
 const allSheets = XLSX.readFile(__dirname + "/public/nodeexcel.xlsx") // 엑셀의 전체 시트를 읽자
 const resultSheet = allSheets.Sheets['result'] // 그중에서 result 시트만 읽고
@@ -48,8 +47,6 @@ app.set('view engine', 'ejs'); // .env를 사용하기 위한 ejs
 
 
 io.on('connection', function(socket){
-    console.log('연결됨');
-    io.emit('list-add', null)
 })
 
 const sendUserResult = (user, isError) =>{ // 메일 보내는 것 성공여부에 관계없이 결과를 프론트에 던져준다.

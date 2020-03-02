@@ -1,0 +1,10 @@
+.table-user{
+    &-container{
+        width: 50%;
+    }
+    &-head-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+}
