@@ -20,7 +20,7 @@ const App = () => {
     };
     const reSendMails = () => {
         const targetResendUsers: Array<User> = userList.filter((el: User)=>{ return el.isError === true });
-        console.log(userList);
+        setUserList([]);
         axios.default.post(`${url}/resendmail`, {
             list: targetResendUsers
         })

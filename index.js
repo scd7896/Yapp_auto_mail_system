@@ -75,7 +75,7 @@ app.get('/', (req,res)=>{ // 단순 인덱스 페이지를 열어주는 web 라�
 
 app.get('/sendmail', (req, res)=>{
     console.log('메일 전송 시작')
-    for(let i = 0; i < 4; i++){
+    for(let i = 0; i < process.env.ALL_MEMBER_COUNT; i++){
         const data = createUserData(allUsers[i]);
         const oneUser = allUsers[i];
         setTimeout(()=>{
@@ -95,7 +95,22 @@ app.get('/sendmail', (req, res)=>{
 
 app.post("/resendmail", (req, res)=>{
     const list = req.body.list
-    console.log(list);
+    console.log(list.length);
+    for(let i = 0 ; i < list.length; i++){
+        const data = createUserData(list[i]);
+        const oneUser = list[i];
+        setTimeout(()=>{
+            mailgun.messages().send(data, function (error, body) {
+                if(error){
+                    sendUserResult(oneUser, true);
+                    return;
+                }else{
+                    sendUserResult(oneUser, false);
+                    return;
+                }
+            });
+        }, i * 1000)
+    }
     return res.status(200).send('good')
 })
 
