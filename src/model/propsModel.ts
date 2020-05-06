@@ -1,8 +1,8 @@
-import {User} from'./index'
+import { User } from './index'
 export interface TableUserProps {
-    users: Array<User>,
-    isError: boolean
+	users: Array<User>,
+	isError: boolean
 }
 export interface TrUserProps {
-    user: User
+	user: User
 }
