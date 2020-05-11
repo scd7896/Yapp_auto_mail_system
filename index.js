@@ -64,7 +64,7 @@ const createUserData = (user) => {
         <p>user의 이메일 : ${user.email}</p>
         <p>user의 이름 : ${user.name} </p>
         <p>합격 여부 : ${user.isPass} </p>
-        `,
+      `,
   };
 };
 
@@ -73,6 +73,7 @@ app.get("/check", (req, res) => {
   return res.render("check");
 });
 app.get("/", (req, res) => {
+  // Yapp admin 페이지
   return res.render("index");
 });
 app.get("/sendmail", (req, res) => {
